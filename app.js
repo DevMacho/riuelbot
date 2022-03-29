@@ -18,7 +18,11 @@ client.on('messageCreate', msg => {
     const splittedMsg = msg.content.split(' ');
     const userId = msg.author.id;
 
-    if (msg.content.startsWith('ㄹ러시안룰렛') && msg.content != 'ㄹ러시안룰렛시작') {
+    if (msg.content.startsWith('ㄹ러시안룰렛') && msg.content != 'ㄹ러시안룰렛시작' && msg.content != 'ㄹ러시안룰렛종료') {
+        if (!msg.member.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) {
+            msg.reply('권한이 부족해요!');
+            return;
+        }
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle('💀- 러시안룰렛 경기를 시작합니다 -💀')
@@ -75,8 +79,20 @@ client.on('messageCreate', msg => {
         .setDescription(result)
         msg.reply({ embeds: [embeds] });
     }
+    if (msg.content == 'ㄹ러시안룰렛종료') {
+        room = {};
+        const embeds = new MessageEmbed()
+	    .setColor('#0099ff')
+	    .setTitle(`-러시안룰렛을 종료합니다.-`)
+        .setDescription(result)
+        msg.reply({ embeds: [embeds] });
+    }
     /////////////////////////////////////////////////////////////
-    if (msg.content.startsWith('ㄹ악어게임') && msg.content != 'ㄹ악어게임시작') {
+    if (msg.content.startsWith('ㄹ악어게임') && msg.content != 'ㄹ악어게임시작'&& msg.content != 'ㄹ악어게임종료') {
+        if (!msg.member.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) {
+            msg.reply('권한이 부족해요!');
+            return;
+        }
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle('💀- 죽음의 악어게임 -💀 ')
@@ -133,8 +149,20 @@ client.on('messageCreate', msg => {
         .setDescription(result)
         msg.reply({ embeds: [embeds] });
     }
+    if (msg.content == 'ㄹ악어게임종료') {
+        room = {};
+        const embeds = new MessageEmbed()
+	    .setColor('#0099ff')
+	    .setTitle(`-악어게임을 종료합니다.-`)
+        .setDescription(result)
+        msg.reply({ embeds: [embeds] });
+    }
         /////////////////////////////////////////////////////////////
-        if (msg.content.startsWith('ㄹ제비뽑기') && msg.content != 'ㄹ제비뽑기시작') {
+    if (msg.content.startsWith('ㄹ제비뽑기') && msg.content != 'ㄹ제비뽑기시작'&& msg.content != 'ㄹ제비뽑기종료') {
+        if (!msg.member.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) {
+            msg.reply('권한이 부족해요!');
+            return;
+        }
             const embeds = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('💀- 죽음의 제비뽑기를 시작합니다 -💀')
@@ -184,7 +212,15 @@ client.on('messageCreate', msg => {
             .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 당첨자 뽑기`)
             .setDescription(result)
             msg.reply({ embeds: [embeds] });
-        }
+    }
+    if (msg.content == 'ㄹ제비뽑기종료') {
+        room = {};
+        const embeds = new MessageEmbed()
+	    .setColor('#0099ff')
+	    .setTitle(`-제비뽑기를 종료합니다.-`)
+        .setDescription(result)
+        msg.reply({ embeds: [embeds] });
+    }
 })
 
-client.login("ODg3MjU5NDI3MTE0MjAxMTA4.YUBiuw.xsl0ed6jX7YXOE8D696ZKKsBkHE");
+client.login("ODg3MjU5NDI3MTE0MjAxMTA4.YUBiuw.GQcSNNbHYT6Anp1OMNRDuVqbOxQ");
