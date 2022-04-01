@@ -314,7 +314,7 @@ client.on('messageCreate', msg => {
             }
             let result = '';
             room.participants.forEach(p => {
-                const selectedMsg = getRandom(0, 2);
+                const selectedMsg = getRandom(0, 1);
                 if (selectedPlayer.includes(p)) {
                     if (selectedMsg == 0) {
                         result += `빨간색 티켓이 <@${p}>님을 반겨줍니다. 도망칠 곳은 없습니다.💀\n`
@@ -354,4 +354,4 @@ client.on('messageCreate', msg => {
     }
 })
 
-client.login("ODg3MjU5NDI3MTE0MjAxMTA4.YUBiuw.n0SOpZ86Bxxh1Wud1Y4ENHv2S-g");
+client.login(token);
