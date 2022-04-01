@@ -11,7 +11,7 @@ let room = {};
 function getRandom(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+    return Math.round(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
   }
 
 client.on('messageCreate', msg => {
@@ -23,17 +23,33 @@ client.on('messageCreate', msg => {
             msg.reply('권한이 부족해요!');
             return;
         }
+        if (splittedMsg.length != 3) {
+            msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (typeof (splittedMsg[1]) != 'number' || typeof (splittedMsg[2]) != 'number') {
+            msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (room != {}) {
+            msg.reply('이미 게임이 진행되고 있습니다!');
+            return;
+        }
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle('💀- 러시안룰렛 경기를 시작합니다 -💀')
         .setDescription(`🔫 총탄에는 총 ${splittedMsg[1]}발의 총알이 장전 가능하며 장전된 총알은 ${splittedMsg[2]}발입니다.\n👧 👦 🧔\n👱‍♀️ 🔫 🧑‍🦱\n🧑‍🦰 👵 👴\n\n참가하시는 참여자들은 ㄹ발사 를 입력해 주세요.🕵️`)
         msg.reply({ embeds: [embeds] });
 
-        room = { id: userId, playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
+        room = { id: userId, type : 'motherRussia', playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
         console.log(room)
     }
     
     if (msg.content == 'ㄹ발사') {
+        if (room == {} || room.type == 'motherRussia') {
+            msg.reply('게임이 생성되지 않았거나 생성된 게임이 러시안 룰렛이 아닙니다.')
+            return;
+        }
         room.participants.push(userId);
         console.log(room)
         msg.reply('-러시안룰렛에 참여하였습니다.-');
@@ -93,17 +109,33 @@ client.on('messageCreate', msg => {
             msg.reply('권한이 부족해요!');
             return;
         }
+        if (splittedMsg.length != 3) {
+            msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (typeof (splittedMsg[1]) != 'number' || typeof (splittedMsg[2]) != 'number') {
+            msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (room != {}) {
+            msg.reply('이미 게임이 진행되고 있습니다!');
+            return;
+        }
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle('💀- 죽음의 악어게임 -💀 ')
         .setDescription(`🐊 공격적인 악어가 입을 벌리고 깊은 낮잠을 즐기고 있습니다. 자고 있는 악어의 이빨을 뽑아오는 단순한 룰의 게임입니다.\n🦷악어의 이빨은 총 ${splittedMsg[1]}개 존재합니다. 단 ${splittedMsg[2]}개의 이빨만이 악어의 단잠을 깨울 수 있습니다. 당신의 용기와 운을 시험하세요.\nㄹ이빨 을 입력하여 게임에 참가하세요🕵️`)
         msg.reply({ embeds: [embeds] });
 
-        room = { id: userId, playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
+        room = { id: userId, type: 'gucci', playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
         console.log(room)
     }
     
     if (msg.content == 'ㄹ이빨') {
+        if (room == {} || room.type == 'gucci') {
+            msg.reply('게임이 생성되지 않았거나 생성된 게임이 악어게임이 아닙니다.')
+            return;
+        }
         room.participants.push(userId);
         console.log(room)
         msg.reply('- 죽음의 악어 게임에 참여하였습니다.-');
@@ -163,17 +195,33 @@ client.on('messageCreate', msg => {
             msg.reply('권한이 부족해요!');
             return;
         }
-            const embeds = new MessageEmbed()
+        if (splittedMsg.length != 3) {
+            msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (typeof (splittedMsg[1]) != 'number' || typeof (splittedMsg[2]) != 'number') {
+            msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (room != {}) {
+            msg.reply('이미 게임이 진행되고 있습니다!');
+            return;
+        }
+        const embeds = new MessageEmbed()
             .setColor('#0099ff')
             .setTitle('💀- 죽음의 제비뽑기를 시작합니다 -💀')
             .setDescription(`🗳 상자에 준비된 티켓은 총 ${splittedMsg[1]}개가 준비되어 있습니다. 이 중 ${splittedMsg[2]}개의 빨간색 티켓이 존재합니다.\n빨간색 티켓에 당첨되신 분은 탈락 처리됩니다.💀\n\n🧑‍🦱 🧑‍🦰 👧 🧔 👱‍♀️ \nㅡㅡㅡㅡㅡㅡㅡㅡ\n🎫 🎫 🎟 🎫 🎫 \nㅡㅡㅡㅡㅡㅡㅡㅡ\n`)
             msg.reply({ embeds: [embeds] });
     
-            room = { id: userId, playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
+            room = { id: userId, type: 'dduck', playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
             console.log(room)
         }
         
         if (msg.content == 'ㄹ뽑기') {
+            if (room == {} || room.type == 'dduck') {
+                msg.reply('게임이 생성되지 않았거나 생성된 게임이 제비뽑기가 아닙니다.')
+                return;
+            }
             room.participants.push(userId);
             console.log(room)
             msg.reply('- 죽음의 제비뽑기에 참여하였습니다. -');
