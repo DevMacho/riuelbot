@@ -4,14 +4,14 @@ const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Disc
 
 client.on('ready', () => {
     console.log('로그인 완료!');
-    client.user.setActivity('머니봇 차트');
+    client.user.setActivity('ㄹ러시안룰렛');
 });
 
 let room = false;
 function getRandom(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+    return Math.round(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
   }
 
 client.on('messageCreate', msg => {
@@ -27,8 +27,16 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (typeof (Number(splittedMsg[1])) != 'number' || typeof (Number(splittedMsg[2])) != 'number') {
+        if (isNaN(splittedMsg[1]) || isNaN(splittedMsg[2])) {
             msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (!(splittedMsg[1] > 0) || !(splittedMsg[2] > 0)) {
+            msg.reply('1 이상의 자연수를 입력해주세요!');
+            return;
+        }
+        if (splittedMsg[1] < splittedMsg[2]) {
+            msg.reply('참가자 수보다 당첨자 수가 많을 수 없습니다!');
             return;
         }
         if(room != false){
@@ -50,6 +58,14 @@ client.on('messageCreate', msg => {
             msg.reply('게임이 생성되지 않았거나 생성된 게임이 러시안 룰렛이 아닙니다.')
             return;
         }
+        if (room.participants.includes(userId)) {
+            msg.reply('이미 해당 게임에 참가했어요!');
+            return;
+        }
+        if (room.playerNum < room.participants.length + 1) {
+            msg.reply('해당 게임의 자리가 꽉 찼어요!!');
+            return;
+        }
         room.participants.push(userId);
         console.log(room)
         msg.reply('-러시안룰렛에 참여하였습니다.-');
@@ -60,13 +76,17 @@ client.on('messageCreate', msg => {
             msg.reply('게임의 생성자만 러시안 룰렛을 시작할 수 있습니다!');
             return;
         }
+        if (room.participants.length < room.playerNum) {
+            msg.reply('설정한 플레이어 수보다 참가자가 적어 게임을 시작할 수 없습니다.');
+            return;
+        }
         let selectedPlayer = [];
         while (selectedPlayer.length != room.selectionPlayerNum) {
             selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
         }
         let result = '';
         room.participants.forEach(p => {
-            const selectedMsg = getRandom(0, 3);
+            const selectedMsg = getRandom(0, 2);
             if (selectedPlayer.includes(p)) {
                 if (selectedMsg == 0) {
                     result += `탕! 총알이 <@${p}>님의 뇌와 교감 중입니다.💀\n`
@@ -94,8 +114,17 @@ client.on('messageCreate', msg => {
 	    .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 실패자 뽑기`)
         .setDescription(result)
         msg.reply({ embeds: [embeds] });
+        room = false;
     }
     if (msg.content == 'ㄹ러시안룰렛종료') {
+        if(room == false){
+            msg.reply('현재 진행되고 있는 게임이 없습니다.');
+            return;
+        }
+        if (room.id != userId) {
+            msg.reply('게임의 생성자만 게임을 종료시킬 수 있습니다.')
+            return;
+        }
         room = false;
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
@@ -112,8 +141,16 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (typeof (Number(splittedMsg[1])) != 'number' || typeof (Number(splittedMsg[2])) != 'number') {
+        if (isNaN(splittedMsg[1]) || isNaN(splittedMsg[2])) {
             msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (!(splittedMsg[1] > 0) || !(splittedMsg[2] > 0)) {
+            msg.reply('1 이상의 자연수를 입력해주세요!');
+            return;
+        }
+        if (splittedMsg[1] < splittedMsg[2]) {
+            msg.reply('참가자 수보다 당첨자 수가 많을 수 없습니다!');
             return;
         }
         if (room != false) {
@@ -135,6 +172,14 @@ client.on('messageCreate', msg => {
             msg.reply('게임이 생성되지 않았거나 생성된 게임이 악어게임이 아닙니다.')
             return;
         }
+        if (room.participants.includes(userId)) {
+            msg.reply('이미 해당 게임에 참가했어요!');
+            return;
+        }
+        if (room.playerNum < room.participants.length + 1) {
+            msg.reply('해당 게임의 자리가 꽉 찼어요!!');
+            return;
+        }
         room.participants.push(userId);
         console.log(room)
         msg.reply('- 죽음의 악어 게임에 참여하였습니다.-');
@@ -145,13 +190,17 @@ client.on('messageCreate', msg => {
             msg.reply('게임의 생성자만 악어게임을 시작할 수 있습니다!');
             return;
         }
+        if (room.participants.length < room.playerNum) {
+            msg.reply('설정한 플레이어 수보다 참가자가 적어 게임을 시작할 수 없습니다.');
+            return;
+        }
         let selectedPlayer = [];
         while (selectedPlayer.length != room.selectionPlayerNum) {
             selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
         }
         let result = '';
         room.participants.forEach(p => {
-            const selectedMsg = getRandom(0, 3);
+            const selectedMsg = getRandom(0, 2);
             if (selectedPlayer.includes(p)) {
                 if (selectedMsg == 0) {
                     result += `<@${p}>님의 성공적으로 악어의 사랑니를 치료했습니다, 지붕 위로 던져주세요. 생존을 축하드립니다.\n`
@@ -179,8 +228,17 @@ client.on('messageCreate', msg => {
 	    .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 당첨자 뽑기`)
         .setDescription(result)
         msg.reply({ embeds: [embeds] });
+        room = false;
     }
     if (msg.content == 'ㄹ악어게임종료') {
+        if(room == false){
+            msg.reply('현재 진행되고 있는 게임이 없습니다.');
+            return;
+        }
+        if (room.id != userId) {
+            msg.reply('게임의 생성자만 게임을 종료시킬 수 있습니다.')
+            return;
+        }
         room = false;
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
@@ -197,8 +255,16 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (typeof (Number(splittedMsg[1])) != 'number' || typeof (Number(splittedMsg[2])) != 'number') {
+        if (isNaN(splittedMsg[1]) || isNaN(splittedMsg[2])) {
             msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
+            return;
+        }
+        if (!(splittedMsg[1] > 0) || !(splittedMsg[2] > 0)) {
+            msg.reply('1 이상의 자연수를 입력해주세요!');
+            return;
+        }
+        if (splittedMsg[1] < splittedMsg[2]) {
+            msg.reply('참가자 수보다 당첨자 수가 많을 수 없습니다!');
             return;
         }
         if (room != false ){
@@ -220,6 +286,14 @@ client.on('messageCreate', msg => {
                 msg.reply('게임이 생성되지 않았거나 생성된 게임이 제비뽑기가 아닙니다.')
                 return;
             }
+            if (room.participants.includes(userId)) {
+                msg.reply('이미 해당 게임에 참가했어요!');
+                return;
+            }
+            if (room.playerNum < room.participants.length + 1) {
+                msg.reply('해당 게임의 자리가 꽉 찼어요!!');
+                return;
+            }
             room.participants.push(userId);
             console.log(room)
             msg.reply('- 죽음의 제비뽑기에 참여하였습니다. -');
@@ -228,6 +302,10 @@ client.on('messageCreate', msg => {
         if (msg.content == 'ㄹ제비뽑기시작') {
             if (userId != room.id) {
                 msg.reply('게임의 생성자만 제비뽑기를 시작할 수 있습니다!');
+                return;
+            }
+            if (room.participants < room.playerNum) {
+                msg.reply('설정한 플레이어 수보다 참가자가 적어 게임을 시작할 수 없습니다.');
                 return;
             }
             let selectedPlayer = [];
@@ -260,6 +338,14 @@ client.on('messageCreate', msg => {
             msg.reply({ embeds: [embeds] });
     }
     if (msg.content == 'ㄹ제비뽑기종료') {
+        if(room == false){
+            msg.reply('현재 진행되고 있는 게임이 없습니다.');
+            return;
+        }
+        if (room.id != userId) {
+            msg.reply('게임의 생성자만 게임을 종료시킬 수 있습니다.')
+            return;
+        }
         room = false;
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
@@ -268,4 +354,4 @@ client.on('messageCreate', msg => {
     }
 })
 
-client.login(token);
+client.login("ODg3MjU5NDI3MTE0MjAxMTA4.YUBiuw.n0SOpZ86Bxxh1Wud1Y4ENHv2S-g");
