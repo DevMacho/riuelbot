@@ -7,11 +7,11 @@ client.on('ready', () => {
     client.user.setActivity('머니봇 차트');
 });
 
-let room = {};
+let room = false;
 function getRandom(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.round(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+    return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
   }
 
 client.on('messageCreate', msg => {
@@ -27,11 +27,11 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (typeof (splittedMsg[1]) != 'number' || typeof (splittedMsg[2]) != 'number') {
+        if (typeof (Number(splittedMsg[1])) != 'number' || typeof (Number(splittedMsg[2])) != 'number') {
             msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (room != {}) {
+        if(room != false){
             msg.reply('이미 게임이 진행되고 있습니다!');
             return;
         }
@@ -46,7 +46,7 @@ client.on('messageCreate', msg => {
     }
     
     if (msg.content == 'ㄹ발사') {
-        if (room == {} || room.type == 'motherRussia') {
+        if (room == {} || room.type != 'motherRussia') {
             msg.reply('게임이 생성되지 않았거나 생성된 게임이 러시안 룰렛이 아닙니다.')
             return;
         }
@@ -61,7 +61,7 @@ client.on('messageCreate', msg => {
             return;
         }
         let selectedPlayer = [];
-        while (selectedPlayer.length != room.selectionPlayerNum.length) {
+        while (selectedPlayer.length != room.selectionPlayerNum) {
             selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
         }
         let result = '';
@@ -96,11 +96,10 @@ client.on('messageCreate', msg => {
         msg.reply({ embeds: [embeds] });
     }
     if (msg.content == 'ㄹ러시안룰렛종료') {
-        room = {};
+        room = false;
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle(`-러시안룰렛을 종료합니다.-`)
-        .setDescription(result)
         msg.reply({ embeds: [embeds] });
     }
     /////////////////////////////////////////////////////////////
@@ -113,11 +112,11 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (typeof (splittedMsg[1]) != 'number' || typeof (splittedMsg[2]) != 'number') {
+        if (typeof (Number(splittedMsg[1])) != 'number' || typeof (Number(splittedMsg[2])) != 'number') {
             msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (room != {}) {
+        if (room != false) {
             msg.reply('이미 게임이 진행되고 있습니다!');
             return;
         }
@@ -132,7 +131,7 @@ client.on('messageCreate', msg => {
     }
     
     if (msg.content == 'ㄹ이빨') {
-        if (room == {} || room.type == 'gucci') {
+        if (room == {} || room.type != 'gucci') {
             msg.reply('게임이 생성되지 않았거나 생성된 게임이 악어게임이 아닙니다.')
             return;
         }
@@ -147,7 +146,7 @@ client.on('messageCreate', msg => {
             return;
         }
         let selectedPlayer = [];
-        while (selectedPlayer.length != room.selectionPlayerNum.length) {
+        while (selectedPlayer.length != room.selectionPlayerNum) {
             selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
         }
         let result = '';
@@ -182,11 +181,10 @@ client.on('messageCreate', msg => {
         msg.reply({ embeds: [embeds] });
     }
     if (msg.content == 'ㄹ악어게임종료') {
-        room = {};
+        room = false;
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle(`-악어게임을 종료합니다.-`)
-        .setDescription(result)
         msg.reply({ embeds: [embeds] });
     }
         /////////////////////////////////////////////////////////////
@@ -199,11 +197,11 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (typeof (splittedMsg[1]) != 'number' || typeof (splittedMsg[2]) != 'number') {
+        if (typeof (Number(splittedMsg[1])) != 'number' || typeof (Number(splittedMsg[2])) != 'number') {
             msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (room != {}) {
+        if (room != false ){
             msg.reply('이미 게임이 진행되고 있습니다!');
             return;
         }
@@ -218,7 +216,7 @@ client.on('messageCreate', msg => {
         }
         
         if (msg.content == 'ㄹ뽑기') {
-            if (room == {} || room.type == 'dduck') {
+            if (room == {} || room.type != 'dduck') {
                 msg.reply('게임이 생성되지 않았거나 생성된 게임이 제비뽑기가 아닙니다.')
                 return;
             }
@@ -233,7 +231,7 @@ client.on('messageCreate', msg => {
                 return;
             }
             let selectedPlayer = [];
-            while (selectedPlayer.length != room.selectionPlayerNum.length) {
+            while (selectedPlayer.length != room.selectionPlayerNum) {
                 selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
             }
             let result = '';
@@ -262,13 +260,12 @@ client.on('messageCreate', msg => {
             msg.reply({ embeds: [embeds] });
     }
     if (msg.content == 'ㄹ제비뽑기종료') {
-        room = {};
+        room = false;
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
 	    .setTitle(`-제비뽑기를 종료합니다.-`)
-        .setDescription(result)
         msg.reply({ embeds: [embeds] });
     }
 })
 
-client.login("ODg3MjU5NDI3MTE0MjAxMTA4.YUBiuw.GQcSNNbHYT6Anp1OMNRDuVqbOxQ");
+client.login(token);
