@@ -31,11 +31,11 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ러시안룰렛 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (!(splittedMsg[1] > 0) || !(splittedMsg[2] > 0)) {
+        if (!(Number(splittedMsg[1]) > 0) || !(Number(splittedMsg[2]) > 0)) {
             msg.reply('1 이상의 자연수를 입력해주세요!');
             return;
         }
-        if (splittedMsg[1] < splittedMsg[2]) {
+        if (Number(splittedMsg[1]) < Number(splittedMsg[2])) {
             msg.reply('참가자 수보다 당첨자 수가 많을 수 없습니다!');
             return;
         }
@@ -49,7 +49,7 @@ client.on('messageCreate', msg => {
         .setDescription(`🔫 총탄에는 총 ${splittedMsg[1]}발의 총알이 장전 가능하며 장전된 총알은 ${splittedMsg[2]}발입니다.\n👧 👦 🧔\n👱‍♀️ 🔫 🧑‍🦱\n🧑‍🦰 👵 👴\n\n참가하시는 참여자들은 ㄹ발사 를 입력해 주세요.🕵️`)
         msg.reply({ embeds: [embeds] });
 
-        room = { id: userId, type : 'motherRussia', playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
+        room = { id: userId, type : 'motherRussia', playerNum: Number(splittedMsg[1]), selectionPlayerNum: Number(splittedMsg[2]), participants: [] };
         console.log(room)
     }
     
@@ -81,8 +81,12 @@ client.on('messageCreate', msg => {
             return;
         }
         let selectedPlayer = [];
+        let selectingPlayer = room.participants;
         while (selectedPlayer.length != room.selectionPlayerNum) {
-            selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
+            const selectedNum = getRandom(0, room.selectionPlayerNum + 1);
+            selectedPlayer.push(selectingPlayer[selectedNum]); 
+            selectingPlayer = selectingPlayer.filter(p => p != selectingPlayer[selectedNum]);
+            console.log(selectingPlayer)
         }
         let result = '';
         room.participants.forEach(p => {
@@ -111,7 +115,7 @@ client.on('messageCreate', msg => {
         });
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
-	    .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 실패자 뽑기`)
+	    .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 탈락자 뽑기`)
         .setDescription(result)
         msg.reply({ embeds: [embeds] });
         room = false;
@@ -145,11 +149,12 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ악어게임 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (!(splittedMsg[1] > 0) || !(splittedMsg[2] > 0)) {
+        if (!(Number(splittedMsg[1]) > 0) || !(Number(splittedMsg[2]) > 0)) {
             msg.reply('1 이상의 자연수를 입력해주세요!');
             return;
         }
-        if (splittedMsg[1] < splittedMsg[2]) {
+        if (Number(splittedMsg[1]) < Number(splittedMsg[2])) {
+            console.log(splittedMsg)
             msg.reply('참가자 수보다 당첨자 수가 많을 수 없습니다!');
             return;
         }
@@ -163,7 +168,7 @@ client.on('messageCreate', msg => {
         .setDescription(`🐊 공격적인 악어가 입을 벌리고 깊은 낮잠을 즐기고 있습니다. 자고 있는 악어의 이빨을 뽑아오는 단순한 룰의 게임입니다.\n🦷악어의 이빨은 총 ${splittedMsg[1]}개 존재합니다. 단 ${splittedMsg[2]}개의 이빨만이 악어의 단잠을 깨울 수 있습니다. 당신의 용기와 운을 시험하세요.\nㄹ이빨 을 입력하여 게임에 참가하세요🕵️`)
         msg.reply({ embeds: [embeds] });
 
-        room = { id: userId, type: 'gucci', playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
+        room = { id: userId, type: 'gucci', playerNum: Number(splittedMsg[1]), selectionPlayerNum: Number(splittedMsg[2]), participants: [] };
         console.log(room)
     }
     
@@ -195,23 +200,17 @@ client.on('messageCreate', msg => {
             return;
         }
         let selectedPlayer = [];
+        let selectingPlayer = room.participants;
         while (selectedPlayer.length != room.selectionPlayerNum) {
-            selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
+            const selectedNum = getRandom(0, room.selectionPlayerNum + 1);
+            selectedPlayer.push(selectingPlayer[selectedNum]); 
+            selectingPlayer = selectingPlayer.filter(p => p != selectingPlayer[selectedNum]);
+            console.log(selectingPlayer)
         }
         let result = '';
         room.participants.forEach(p => {
             const selectedMsg = getRandom(0, 2);
             if (selectedPlayer.includes(p)) {
-                if (selectedMsg == 0) {
-                    result += `<@${p}>님의 성공적으로 악어의 사랑니를 치료했습니다, 지붕 위로 던져주세요. 생존을 축하드립니다.\n`
-                }
-                if (selectedMsg == 1) {
-                    result += `악어가 <@${p}>님의 따뜻한 손길에 만족하고 다시 잠을 청합니다. 생존을 축하드립니다.\n`
-                }
-                if (selectedMsg == 2) {
-                    result += `<@${p}>님은 잠자는 악어의 이빨(1)을 획득했습니다. 생존을 축하드립니다.\n`
-                }
-            } else {
                 if (selectedMsg == 0) {
                     result += `악어의 이빨을 뽑는 순간 <@${p}>님의 시야가 붉게 변합니다. X를 눌러 조의를 표하십시오.💀 \n`
                 }
@@ -221,11 +220,21 @@ client.on('messageCreate', msg => {
                 if (selectedMsg == 2) {
                     result += `<@${p}>님은 성공적으로 악어의 이빨을 뽑.... 눈을 뜨니 악어의 뱃속입니다.💀\n`
                 }
+            } else {
+                if (selectedMsg == 0) {
+                    result += `<@${p}>님의 성공적으로 악어의 사랑니를 치료했습니다, 지붕 위로 던져주세요. 생존을 축하드립니다.\n`
+                }
+                if (selectedMsg == 1) {
+                    result += `악어가 <@${p}>님의 따뜻한 손길에 만족하고 다시 잠을 청합니다. 생존을 축하드립니다.\n`
+                }
+                if (selectedMsg == 2) {
+                    result += `<@${p}>님은 잠자는 악어의 이빨(1)을 획득했습니다. 생존을 축하드립니다.\n`
+                }
             }
         });
         const embeds = new MessageEmbed()
 	    .setColor('#0099ff')
-	    .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 당첨자 뽑기`)
+	    .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 탈락자 뽑기`)
         .setDescription(result)
         msg.reply({ embeds: [embeds] });
         room = false;
@@ -259,11 +268,11 @@ client.on('messageCreate', msg => {
             msg.reply('`ㄹ제비뽑기 [참가인원:자연수] [당첨자:자연수]`로 입력해주세요!')
             return;
         }
-        if (!(splittedMsg[1] > 0) || !(splittedMsg[2] > 0)) {
+        if (!(Number(splittedMsg[1]) > 0) || !(Number(splittedMsg[2]) > 0)) {
             msg.reply('1 이상의 자연수를 입력해주세요!');
             return;
         }
-        if (splittedMsg[1] < splittedMsg[2]) {
+        if (Number(splittedMsg[1]) < Number(splittedMsg[2])) {
             msg.reply('참가자 수보다 당첨자 수가 많을 수 없습니다!');
             return;
         }
@@ -277,7 +286,7 @@ client.on('messageCreate', msg => {
             .setDescription(`🗳 상자에 준비된 티켓은 총 ${splittedMsg[1]}개가 준비되어 있습니다. 이 중 ${splittedMsg[2]}개의 빨간색 티켓이 존재합니다.\n빨간색 티켓에 당첨되신 분은 탈락 처리됩니다.💀\n\n🧑‍🦱 🧑‍🦰 👧 🧔 👱‍♀️ \nㅡㅡㅡㅡㅡㅡㅡㅡ\n🎫 🎫 🎟 🎫 🎫 \nㅡㅡㅡㅡㅡㅡㅡㅡ\n`)
             msg.reply({ embeds: [embeds] });
     
-            room = { id: userId, type: 'dduck', playerNum: splittedMsg[1], selectionPlayerNum: splittedMsg[2], participants: [] };
+            room = { id: userId, type: 'dduck', playerNum: Number(splittedMsg[1]), selectionPlayerNum: Number(splittedMsg[2]), participants: [] };
             console.log(room)
         }
         
@@ -309,8 +318,12 @@ client.on('messageCreate', msg => {
                 return;
             }
             let selectedPlayer = [];
+            let selectingPlayer = room.participants;
             while (selectedPlayer.length != room.selectionPlayerNum) {
-                selectedPlayer.push(room.participants[getRandom(0, room.selectionPlayerNum)]); 
+                const selectedNum = getRandom(0, room.selectionPlayerNum + 1);
+                selectedPlayer.push(selectingPlayer[selectedNum]); 
+                selectingPlayer = selectingPlayer.filter(p => p != selectingPlayer[selectedNum]);
+                console.log(selectingPlayer)
             }
             let result = '';
             room.participants.forEach(p => {
@@ -333,7 +346,7 @@ client.on('messageCreate', msg => {
             });
             const embeds = new MessageEmbed()
             .setColor('#0099ff')
-            .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 당첨자 뽑기`)
+            .setTitle(`${room.playerNum}중에서 ${room.selectionPlayerNum}의 인원만큼 탈락자 뽑기`)
             .setDescription(result)
             msg.reply({ embeds: [embeds] });
     }
