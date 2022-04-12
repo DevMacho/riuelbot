@@ -83,7 +83,7 @@ client.on('messageCreate', msg => {
         let selectedPlayer = [];
         let selectingPlayer = room.participants;
         while (selectedPlayer.length != room.selectionPlayerNum) {
-            const selectedNum = getRandom(0, room.selectionPlayerNum + 1);
+            const selectedNum = getRandom(0, selectingPlayer.length);
             selectedPlayer.push(selectingPlayer[selectedNum]); 
             selectingPlayer = selectingPlayer.filter(p => p != selectingPlayer[selectedNum]);
             console.log(selectingPlayer)
@@ -202,7 +202,7 @@ client.on('messageCreate', msg => {
         let selectedPlayer = [];
         let selectingPlayer = room.participants;
         while (selectedPlayer.length != room.selectionPlayerNum) {
-            const selectedNum = getRandom(0, room.selectionPlayerNum + 1);
+            const selectedNum = getRandom(0, selectingPlayer.length);
             selectedPlayer.push(selectingPlayer[selectedNum]); 
             selectingPlayer = selectingPlayer.filter(p => p != selectingPlayer[selectedNum]);
             console.log(selectingPlayer)
@@ -320,7 +320,7 @@ client.on('messageCreate', msg => {
             let selectedPlayer = [];
             let selectingPlayer = room.participants;
             while (selectedPlayer.length != room.selectionPlayerNum) {
-                const selectedNum = getRandom(0, room.selectionPlayerNum + 1);
+                const selectedNum = getRandom(0, selectingPlayer.length);
                 selectedPlayer.push(selectingPlayer[selectedNum]); 
                 selectingPlayer = selectingPlayer.filter(p => p != selectingPlayer[selectedNum]);
                 console.log(selectingPlayer)
